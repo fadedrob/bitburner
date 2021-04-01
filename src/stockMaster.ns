@@ -43,7 +43,7 @@ function format(num) {
         abs_num /= 1000;
     }
 
-    return ((Math.sgn(num) < 0) ? "-$" : "$") + num.toFixed(3) + symbols[i];
+    return ((Math.sgn(num) < 0) ? "-$" : "$") + abs_num.toFixed(3) + symbols[i];
 }
 
 
