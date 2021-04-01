@@ -16,6 +16,7 @@ function refresh(ns, stocks, myStocks) {
         stocks[i].vol = ns.getStockVolatility(sym);
         stocks[i].prob = 2 * (ns.getStockForecast(sym) - 0.5);
         stocks[i].expRet = stocks[i].vol * stocks[i].prob / 2;
+        stocks[i].maxShares = ns.getStockMaxShares(sym);
         corpus += stocks[i].price * stocks[i].shares;
         if (stocks[i].shares > 0) myStocks.push(stocks[i]);
     }
@@ -32,8 +33,13 @@ function localeHHMMSS(ms = 0) {
 }
 
 function buy(ns, stock, numShares) {
+    if (numShares + stock.shares > stock.maxShares ) {
+        numShares = stock.maxShares - stock.shares;
+    }
+    if (numShares > 0) {
     ns.buyStock(stock.sym, numShares);
-    ns.print(`[${localeHHMMSS()}] Bought ${stock.sym} for ${format(numShares * stock.price)}`);
+    ns.tprint(`[${localeHHMMSS()}] Bought ${stock.sym} for ${format(numShares * stock.price)}`);
+    }
 }
 
 function sell(ns, stock, numShares) {
