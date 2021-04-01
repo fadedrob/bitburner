@@ -33,7 +33,7 @@ function localeHHMMSS(ms = 0) {
 
 function buy(ns, stock, numShares) {
     ns.buyStock(stock.sym, numShares);
-    ns.tprint(`[${localeHHMMSS()}] Bought ${stock.sym} for ${format(numShares * stock.price)}`);
+    ns.print(`[${localeHHMMSS()}] Bought ${stock.sym} for ${format(numShares * stock.price)}`);
 }
 
 function sell(ns, stock, numShares) {
