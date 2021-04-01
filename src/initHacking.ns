@@ -11,6 +11,7 @@ const filesToDownload = [
   'runHacking.ns',
   'find.ns',
   'stockMaster.ns',
+  'displayServerMaxMoney.ns',
 ]
 const valuesToRemove = ['BB_SERVER_MAP']
 
