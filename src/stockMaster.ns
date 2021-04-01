@@ -23,27 +23,33 @@ function refresh(ns, stocks, myStocks) {
     return corpus;
 }
 
+function localeHHMMSS(ms = 0) {
+  if (!ms) {
+    ms = new Date().getTime();
+  }
+
+  return new Date(ms).toLocaleTimeString();
+}
+
 function buy(ns, stock, numShares) {
     ns.buyStock(stock.sym, numShares);
-    ns.tprint(`Bought ${stock.sym} for ${format(numShares * stock.price)}`);
+    ns.tprint(`[${localeHHMMSS()}] Bought ${stock.sym} for ${format(numShares * stock.price)}`);
 }
 
 function sell(ns, stock, numShares) {
     let profit = numShares * (stock.price - stock.buyPrice) - 2 * commission;
-    ns.tprint(`Sold ${stock.sym} for profit of ${format(profit)}`);
+    ns.tprint(`[${localeHHMMSS()}] Sold ${stock.sym} for profit of ${format(profit)}`);
     ns.sellStock(stock.sym, numShares);
 }
 
 function format(num) {
     let symbols = ["", "K", "M", "B", "T", "Qa", "Qi", "Sx", "Sp", "Oc"];
+    let sign = (Math.sgn(num) < 0 ? "-$" : "$");
     let abs_num = Math.abs(num);
     let i = 0;
-    for (;(abs_num >= 1000) && (i < symbols.length); i++) {
-        num /= 1000;
-        abs_num /= 1000;
-    }
+    for (; (abs_num >= 1000) && (i < symbols.length); i++) abs_num /= 1000;
 
-    return ((Math.sgn(num) < 0) ? "-$" : "$") + abs_num.toFixed(3) + symbols[i];
+    return sign + abs_num.toFixed(3) + symbols[i];
 }
 
 
