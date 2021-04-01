@@ -25,12 +25,12 @@ function refresh(ns, stocks, myStocks) {
 
 function buy(ns, stock, numShares) {
     ns.buyStock(stock.sym, numShares);
-    ns.print(`Bought ${stock.sym} for ${format(numShares * stock.price)}`);
+    ns.tprint(`Bought ${stock.sym} for ${format(numShares * stock.price)}`);
 }
 
 function sell(ns, stock, numShares) {
     let profit = numShares * (stock.price - stock.buyPrice) - 2 * commission;
-    ns.print(`Sold ${stock.sym} for profit of ${format(profit)}`);
+    ns.tprint(`Sold ${stock.sym} for profit of ${format(profit)}`);
     ns.sellStock(stock.sym, numShares);
 }
 
