@@ -17,7 +17,7 @@ export async function main(ns) {
 
   const homeRam = ns.getServerRam('home').shift()
 
-  if (homeRam >= 50) {
+  if (homeRam >= 40) {
     ns.tprint(`[${localeHHMMSS()}] Spawning spider.ns`)
     await ns.run('spider.ns', 1, 'mainHack.ns')
     await ns.sleep(3000)
