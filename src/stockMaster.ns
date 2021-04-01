@@ -38,7 +38,7 @@ function format(num) {
     let symbols = ["", "K", "M", "B", "T", "Qa", "Qi", "Sx", "Sp", "Oc"];
     let abs_num = Math.abs(num);
     let i = 0;
-    for (;(num >= 1000) && (i < symbols.length); i++) {
+    for (;(abs_num >= 1000) && (i < symbols.length); i++) {
         num /= 1000;
         abs_num /= 1000;
     }
