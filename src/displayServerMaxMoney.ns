@@ -1,0 +1,9 @@
+export async function main(ns) {
+    let server = ns.args[0];
+    let serverMaxMoney = ns.getServerMaxMoney(server);
+    let symbols = ["", "K", "M", "B", "T", "Qa", "Qi", "Sx", "Sp", "Oc"];
+    let i = 0;
+    for (; (serverMaxMoney >= 1000) && i < symbols.length; i++) serverMaxMoney /= 1000;
+    
+    ns.tprint(`Max money of ${server} is $${serverMaxMoney.toFixed(3)}${symbols[i]}`);
+}
