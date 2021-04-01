@@ -33,7 +33,7 @@ function localeHHMMSS(ms = 0) {
 }
 
 function buy(ns, stock, numShares) {
-    if (numShares + stock.shares > stock.maxShares ) {
+    if (numShares + stock.shares > stock.maxShares) {
         numShares = stock.maxShares - stock.shares;
     }
     if (numShares > 0) {
@@ -51,11 +51,11 @@ function sell(ns, stock, numShares) {
 function format(num) {
     let symbols = ["", "K", "M", "B", "T", "Qa", "Qi", "Sx", "Sp", "Oc"];
     let sign = (Math.sgn(num) < 0 ? "-$" : "$");
-    let abs_num = Math.abs(num);
+    let num = Math.abs(num);
     let i = 0;
-    for (; (abs_num >= 1000) && (i < symbols.length); i++) abs_num /= 1000;
+    for (; (num >= 1000) && (i < symbols.length); i++) num /= 1000;
 
-    return sign + abs_num.toFixed(3) + symbols[i];
+    return sign + num.toFixed(3) + symbols[i];
 }
 
 
