@@ -72,6 +72,7 @@ export async function main(ns) {
   } else {
     ns.tprint(`[${localeHHMMSS()}] Spawning runHacking.ns`)
     ns.spawn('runHacking.ns', 1)
+    ns.tprint(`[${localeHHMMSS()}] Spawning stockMaster.ns`)
     ns.spawn('stockMaster.ns, 1)
   }
 }
