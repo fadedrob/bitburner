@@ -51,7 +51,7 @@ function sell(ns, stock, numShares) {
 function format(num) {
     let symbols = ["", "K", "M", "B", "T", "Qa", "Qi", "Sx", "Sp", "Oc"];
     let sign = (Math.sgn(num) < 0 ? "-$" : "$");
-    let num = Math.abs(num);
+    num = Math.abs(num);
     let i = 0;
     for (; (num >= 1000) && (i < symbols.length); i++) num /= 1000;
 
