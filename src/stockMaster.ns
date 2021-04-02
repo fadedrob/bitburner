@@ -42,10 +42,12 @@ function buy(ns, stock, numShares) {
     }
 }
 
-function sell(ns, stock, numShares) {
+function sell(ns, stock, numShares, totalProfit) {
     let profit = numShares * (stock.price - stock.buyPrice) - 2 * commission;
-    ns.tprint(`[${localeHHMMSS()}] Sold ${stock.sym} for profit of ${format(profit)}`);
+    totalProfit += profit;
+    ns.tprint(`[${localeHHMMSS()}] Sold ${stock.sym} for profit of ${format(profit)} [Total: ${format(totalProfit)}]`);
     ns.sellStock(stock.sym, numShares);
+    return totalProfit;
 }
 
 function format(num) {
@@ -65,6 +67,7 @@ export async function main(ns) {
     let stocks = [];
     let myStocks = [];
     let corpus = 0;
+    let totalProfit = 0;
     for (let i = 0; i < ns.getStockSymbols().length; i++)
         stocks.push({ sym: ns.getStockSymbols()[i] });
 
@@ -74,7 +77,7 @@ export async function main(ns) {
         //Sell underperforming shares
         for (let i = 0; i < myStocks.length; i++) {
             if (stocks[0].expRet > myStocks[i].expRet) {
-                sell(ns, myStocks[i], myStocks[i].shares);
+                totalProfit = sell(ns, myStocks[i], myStocks[i].shares, totalProfit);
                 corpus -= commission;
             }
         }
@@ -83,7 +86,7 @@ export async function main(ns) {
             if (ns.getServerMoneyAvailable("home") < (fracL * corpus)) {
                 let cashNeeded = (corpus * fracH - ns.getServerMoneyAvailable("home") + commission);
                 let numShares = Math.floor(cashNeeded / myStocks[i].price);
-                sell(ns, myStocks[i], numShares);
+                totalProfit = sell(ns, myStocks[i], numShares, totalProfit);
                 corpus -= commission;
             }
         }
