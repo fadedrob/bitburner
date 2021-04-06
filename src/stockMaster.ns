@@ -38,14 +38,14 @@ function buy(ns, stock, numShares) {
     }
     if (numShares > 0) {
     ns.buyStock(stock.sym, numShares);
-    ns.tprint(`[${localeHHMMSS()}] Bought ${stock.sym} for ${format(numShares * stock.price)}`);
+    ns.print(`[${localeHHMMSS()}] Bought ${stock.sym} for ${format(numShares * stock.price)}`);
     }
 }
 
 function sell(ns, stock, numShares, totalProfit) {
     let profit = numShares * (stock.price - stock.buyPrice) - 2 * commission;
     totalProfit += profit;
-    ns.tprint(`[${localeHHMMSS()}] Sold ${stock.sym} for profit of ${format(profit)} [Total: ${format(totalProfit)}]`);
+    ns.print(`[${localeHHMMSS()}] Sold ${stock.sym} for profit of ${format(profit)} [Total: ${format(totalProfit)}]`);
     ns.sellStock(stock.sym, numShares);
     return totalProfit;
 }
