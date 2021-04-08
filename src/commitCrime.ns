@@ -1,6 +1,7 @@
 const settings = {
   keys: {
     crimes: 'BB_CRIMES',
+    crimesStop: 'BB_CRIMES_STOP',
   },
   intervalToRecheck: 10 * 60 * 1000,
 }
@@ -30,11 +31,14 @@ function getCrimesData(ns) {
 
 function selectCrime(crimes) {
   const crimesList = Object.keys(crimes)
+  crimesList.sort((a, b) => crimes[b].chance - crimes[a].chance)
+  const solidChanceCrimes = crimesList.filter((crime) => crimes[crime].chance >= 0.8)
+  const topCrimesList = solidChanceCrimes.length > 3 ? solidChanceCrimes : crimesList.slice(0, 2)
 
   let bestCrime = 'shoplift'
   let bestCrimeWeight = 0
 
-  crimesList.forEach((crime) => {
+  topCrimesList.forEach((crime) => {
     const crimeWeight =
       crimes[crime].chance *
       (crimes[crime].stats.money / crimes[crime].stats.time) *
@@ -70,7 +74,9 @@ export async function main(ns) {
   const endTime = new Date().getTime() + settings.intervalToRecheck
 
   while (continueCommitingCrime) {
-    if (new Date().getTime() > endTime) {
+    const crimesStop = getItem(settings.keys.crimesStop)
+
+    if (crimesStop || new Date().getTime() > endTime) {
       continueCommitingCrime = false
     } else {
       while (ns.isBusy()) {
@@ -83,5 +89,8 @@ export async function main(ns) {
     }
   }
 
-  getCrimesData(ns)
+  const crimesStop = getItem(settings.keys.crimesStop)
+  if (!crimesStop) {
+    getCrimesData(ns)
+  }
 }
