@@ -17,17 +17,7 @@ export async function main(ns) {
 
   const homeRam = ns.getServerRam('home').shift()
 
-  if (homeRam >= 40) {
-    ns.tprint(`[${localeHHMMSS()}] Spawning spider.ns`)
-    await ns.run('spider.ns', 1, 'mainHack.ns')
-    await ns.sleep(3000)
-    ns.tprint(`[${localeHHMMSS()}] Spawning playerServers.ns`)
-    ns.run('playerServers.ns', 1)
-    await ns.sleep(3000)
-    ns.tprint(`[${localeHHMMSS()}] Spawning stockMaster.ns`)
-    ns.spawn('stockMaster.ns', 1)
-  }
-  else if (homeRam >= 32) {
+if (homeRam >= 32) {
     ns.tprint(`[${localeHHMMSS()}] Spawning spider.ns`)
     await ns.run('spider.ns', 1, 'mainHack.ns')
     await ns.sleep(3000)

@@ -10,7 +10,6 @@ const filesToDownload = [
   'killAll.ns',
   'runHacking.ns',
   'find.ns',
-  'stockMaster.ns',
 ]
 const valuesToRemove = ['BB_SERVER_MAP']
 
