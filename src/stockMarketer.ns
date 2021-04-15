@@ -2,6 +2,7 @@ const stockSymbols = ['ECP', 'BLD', 'OMTK', 'FSIG', 'FLCM', 'CTYS']
 const avgTrackers = {}
 const profitTrackers = {}
 const risingTrackers = {}
+const firstInvests = {}
 
 let corpus
 
@@ -50,7 +51,7 @@ function processTick(ns, stockSymbol) {
         const profit = profitTracker.volume * (profitTracker.value - shortSellValue) - 200000
         corpus += profit
 
-        const message = `[${localeHHMMSS()}] ${stockSymbol}, profitPercentage: ${nFormat(profitPercentage, '0.0%')}, selling shorts,
+        const message = `[${localeHHMMSS()}] ${stockSymbol}, profitPercentage: ${ns.nFormat(profitPercentage, '0.0%')}, selling shorts,
           profitTracker.volume: ${profitTracker.volume}, profitTracker.value: ${ns.nFormat(profitTracker.value, '$0.000a')},
           shortSellValue: ${ns.nFormat(shortSellValue, '$0.000a')},
           profit: ${ns.nFormat(profit, '$0.000a')}, corpus: ${ns.nFormat(corpus, '$0.000a')}`
@@ -72,7 +73,7 @@ function processTick(ns, stockSymbol) {
         const profit = profitTracker.volume * (longSellValue - profitTracker.value) - 200000
         corpus += profit
 
-        const message = `[${localeHHMMSS()}] ${stockSymbol}, profitPercentage: ${nFormat(profitPercentage, '0.0%')}, selling longs,
+        const message = `[${localeHHMMSS()}] ${stockSymbol}, profitPercentage: ${ns.nFormat(profitPercentage, '0.0%')}, selling longs,
           profitTracker.volume: ${profitTracker.volume}, profitTracker.value: ${ns.nFormat(profitTracker.value, '$0.000a')},
           longSellValue: ${ns.nFormat(longSellValue, '$0.000a')},
           profit: ${ns.nFormat(profit, '$0.000a')}, corpus: ${ns.nFormat(corpus, '$0.000a')}`
@@ -120,7 +121,7 @@ function processTick(ns, stockSymbol) {
           }
         }
 
-        const moneyToInvest = Math.min(getMoney(ns), Math.floor(corpus / 6))
+        const moneyToInvest = firstInvests[stockSymbol] ? getMoney(ns) : Math.floor(corpus / 6)
         if (moneyToInvest > minimumMoneyToInvest) {
           let volume = Math.floor(moneyToInvest / ns.getStockAskPrice(stockSymbol))
           volume = Math.min(volume, ns.getStockMaxShares(stockSymbol))
@@ -141,6 +142,7 @@ function processTick(ns, stockSymbol) {
             ns.tprint(message)
 
             if (longBuyValue && volume) {
+              firstInvests[stockSymbol] = true
               profitTracker = {
                 position: 'Long',
                 value: longBuyValue,
@@ -181,7 +183,7 @@ function processTick(ns, stockSymbol) {
           }
         }
 
-        const moneyToInvest = Math.min(getMoney(ns), Math.floor(corpus / 6))
+        const moneyToInvest = firstInvests[stockSymbol] ? getMoney(ns) : Math.floor(corpus / 6)
         if (moneyToInvest > minimumMoneyToInvest) {
           let volume = Math.floor(moneyToInvest / ns.getStockBidPrice(stockSymbol))
           volume = Math.min(volume, ns.getStockMaxShares(stockSymbol))
@@ -202,6 +204,7 @@ function processTick(ns, stockSymbol) {
             ns.tprint(message)
 
             if (shortBuyValue && volume) {
+              firstInvests[stockSymbol] = true
               profitTracker = {
                 position: 'Short',
                 value: shortBuyValue,
@@ -231,6 +234,13 @@ export async function main(ns) {
   ns.disableLog('ALL')
   let tickCounter = 1
   corpus = ns.getServerMoneyAvailable('home') - 1000000
+
+  stockSymbols.forEach((stockSymbol) => {
+    const [sharesLong, avgPriceLong, sharesShort, avgPriceShort] = ns.getStockPosition(stockSymbol)
+
+    corpus += sharesLong * avgPriceLong + sharesShort * avgPriceShort
+  })
+
   ns.print(`[${localeHHMMSS()}] Tick counter: 1, corpus: ${ns.nFormat(corpus, '$0.000a')}`)
   while (true) {
     for (let i = 0; i < stockSymbols.length; i++) {
